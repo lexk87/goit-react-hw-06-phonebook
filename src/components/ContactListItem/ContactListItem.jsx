@@ -8,8 +8,16 @@ import {
     ContactName,
     ContactPhoneNumber,
 } from './ContactListItem.styled';
+import { deleteContact } from '../../redux/contactsSlice';
+import { useDispatch } from 'react-redux';
 
-export const ContactListItem = ({ id, name, number, removeContact }) => {
+export const ContactListItem = ({ id, name, number }) => {
+    const dispatch = useDispatch();
+
+    const removeContact = id => {
+        dispatch(deleteContact(id));
+    };
+
     return (
         <Item>
             <IconWrapper>
@@ -32,5 +40,4 @@ ContactListItem.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     number: PropTypes.string,
-    removeContact: PropTypes.func,
 };
