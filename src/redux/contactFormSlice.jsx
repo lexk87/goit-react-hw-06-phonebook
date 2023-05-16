@@ -2,11 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const contactFormSlice = createSlice({
     name: 'contactForm',
-    initialState: false,
+    initialState: { isFormOpened: false },
     reducers: {
-        isFormOpened: state => !state,
+        toggleForm(state) {
+            state.isFormOpened = !state.isFormOpened;
+        },
     },
 });
 
-export const { isFormOpened } = contactFormSlice.actions;
+export const { toggleForm } = contactFormSlice.actions;
 export const contactFormReducer = contactFormSlice.reducer;

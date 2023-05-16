@@ -1,16 +1,22 @@
-import PropTypes from 'prop-types';
 import { HeaderContainer, HeaderTitle, NewContactBtn } from './Header.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContactForm } from 'redux/selectors';
+import { toggleForm } from 'redux/contactFormSlice';
 
-export const Header = ({ isOpenForm, toggle }) => (
-    <HeaderContainer>
-        <HeaderTitle>PHONEBOOK</HeaderTitle>
-        <NewContactBtn type="button" onClick={toggle}>
-            {isOpenForm ? 'Cancel' : '+ New contact'}
-        </NewContactBtn>
-    </HeaderContainer>
-);
+export const Header = () => {
+    const dispatch = useDispatch();
+    const formVisibility = useSelector(getContactForm);
 
-Header.propTypes = {
-    isOpenForm: PropTypes.bool,
-    toggle: PropTypes.func,
+    const toggle = () => {
+        dispatch(toggleForm());
+    };
+
+    return (
+        <HeaderContainer>
+            <HeaderTitle>PHONEBOOK</HeaderTitle>
+            <NewContactBtn type="button" onClick={toggle}>
+                {formVisibility ? 'Cancel' : '+ New contact'}
+            </NewContactBtn>
+        </HeaderContainer>
+    );
 };

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {
     FormContainer,
     Label,
@@ -12,6 +11,11 @@ import {
 import { Formik, Form } from 'formik';
 import { nanoid } from 'nanoid';
 import * as yup from 'yup';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const nameRegex = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
 const numberRegex =
@@ -35,10 +39,30 @@ const schema = yup.object().shape({
         .required('Number is a required field'),
 });
 
-export const ContactForm = ({ addContact }) => {
+export const ContactForm = () => {
+    const dispatch = useDispatch();
+    const contacts = useSelector(getContacts);
+
     const handleSubmit = (values, { resetForm }) => {
         values.id = nanoid();
-        addContact(values);
+
+        const isContactIncluded = contacts.some(
+            contact => contact.name.toLowerCase() === values.name.toLowerCase()
+        );
+
+        isContactIncluded
+            ? toast.warn(`${values.name} is already in contacts`, {
+                  position: 'top-right',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'colored',
+              })
+            : dispatch(addContact(values));
+
         resetForm();
     };
 
@@ -86,8 +110,4 @@ export const ContactForm = ({ addContact }) => {
             </Formik>
         </FormContainer>
     );
-};
-
-ContactForm.propTypes = {
-    addContact: PropTypes.func,
 };
